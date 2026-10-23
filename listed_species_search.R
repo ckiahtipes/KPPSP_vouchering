@@ -49,3 +49,24 @@ crosswalk = function(x, y){
 cross_allspec = crosswalk(ALL_species$Scientific.Name, target_species)
 cross_natives = crosswalk(AFP_natives$Scientific.Name, target_species)
 cross_natrlzd = crosswalk(AFP_natrlzd$Scientific.Name, target_species)
+
+#We want to pull the number of genera and get a list of species without photos to target for the event.
+
+AFP_cross = sapply(target_species, function(x){
+  grep(x, AFP_natives$Scientific.Name)
+})
+
+pull = vector("numeric", length(AFP_cross))
+
+for(i in 1:length(pull)){
+  if(length(AFP_cross[[i]])>0){
+    pull[i] = AFP_cross[[i]]
+  }
+}
+
+AFP_pull = AFP_natives[pull[pull > 0],]
+
+genera = AFP_pull$Genus
+
+write.csv(AFP_pull, "AFP_plant-list.csv")
+
